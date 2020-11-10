@@ -60,14 +60,18 @@ void cMain::OnMenuOpen(wxCommandEvent& evt)
 
 	// User cancels
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
+	{
 		return;
+	}
 	
 	// Checks for valid file then saves path as string
 	wxFileInputStream input_stream(openFileDialog.GetPath());
 	if (!input_stream.IsOk())
 	{
 		wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
-		return;
+		{
+			return;
+		}
 	}
 	string loadFilePath(openFileDialog.GetPath());
 	
@@ -98,7 +102,9 @@ void cMain::OnMenuSaveAs(wxCommandEvent& evt)
 
 	// User cancels
 	if (saveFileDialog.ShowModal() == wxID_CANCEL)
+	{
 		return;
+	}
 
 	// Checks that file can be saved
 	wxFileOutputStream output_stream(saveFileDialog.GetPath());

@@ -3,6 +3,7 @@
 
 # But these files
 !.gitignore
+!README.txt
 !cApp.h
 !cMain.h
 !cApp.cpp

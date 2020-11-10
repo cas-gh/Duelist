@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But these files
+!.gitignore
+!cApp.h
+!cMain.h
+!cApp.cpp
+!cMain.cpp

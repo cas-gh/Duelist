@@ -1,13 +1,8 @@
 // TODO
-// Implement a save file deletion tool. Maybe done
-// through another menu bar option that deletes the
-// currently loaded file.
-//
-// Also implement either some keyword functionality or
-// another button to clear out the currently stored data
-// in the list box.
-//
-//
+// 1) Make the interface look a little nicer
+// 2) Add enter key to submit and escape key to clear TxtCtrl
+// 3) Consider the steps going forward to enable networking
+
 
 #include "cMain.h"
 #include <iostream>
@@ -21,6 +16,7 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 	EVT_MENU(10002, cMain::OnMenuSaveAs)
 	EVT_MENU(10003, cMain::OnMenuExit)
 	EVT_BUTTON(10004, OnButtonClicked)
+	EVT_BUTTON(10005, cMain::OnButtonClear)
 wxEND_EVENT_TABLE()
 
 
@@ -40,7 +36,8 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "GUI Practice", wxPoint(30,30), wxSi
 	m_MenuBar->Append(menuFile, "File");
 
 	m_btn1 = new wxButton(this, 10004, "Submit", wxPoint(10, 10), wxSize(100, 35));
-	m_txt1 = new wxTextCtrl(this, wxID_ANY, "", wxPoint(10, 70), wxSize(300, 25));
+	m_btn2 = new wxButton(this, 10005, "Clear", wxPoint(120, 10), wxSize(100, 35));
+	m_txt1 = new wxTextCtrl(this, wxID_ANY, "", wxPoint(10, 65), wxSize(300, 25));
 	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 110), wxSize(300, 300));
 }
 
@@ -157,5 +154,11 @@ void cMain::OnButtonClicked(wxCommandEvent& evt)
 	//saveFile << ctime(&timestamp) << " " << (m_txt1->GetValue()) << '\n';
 
 	m_txt1->Clear();
+	evt.Skip();
+}
+
+void cMain::OnButtonClear(wxCommandEvent& evt)
+{
+	m_list1->Clear();
 	evt.Skip();
 }

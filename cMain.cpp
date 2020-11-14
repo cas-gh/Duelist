@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <wx/accel.h>
 
 
 // Event handling table
@@ -17,6 +18,7 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 	EVT_MENU(10003, cMain::OnMenuExit)
 	EVT_BUTTON(10004, OnButtonClicked)
 	EVT_BUTTON(10005, cMain::OnButtonClear)
+	EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
 wxEND_EVENT_TABLE()
 
 
@@ -37,13 +39,23 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "GUI Practice", wxPoint(30,30), wxSi
 
 	m_btn1 = new wxButton(this, 10004, "Submit", wxPoint(10, 10), wxSize(100, 35));
 	m_btn2 = new wxButton(this, 10005, "Clear", wxPoint(120, 10), wxSize(100, 35));
-	m_txt1 = new wxTextCtrl(this, wxID_ANY, "", wxPoint(10, 65), wxSize(300, 25));
+	// wxTE_PROCESS_ENTER used to accept the enter key with the field focused
+	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 65), wxSize(300, 25), wxTE_PROCESS_ENTER);
 	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 110), wxSize(300, 300));
 }
 
 // This is something about virtual shit idk
 cMain::~cMain()
 {
+}
+
+void cMain::OnEnterPressed(wxCommandEvent& evt)
+{	
+	m_list1->AppendString(m_txt1->GetValue());
+	m_txt1->Clear();
+	
+	// Set to false to stop windows bloop sound
+	evt.Skip(false);
 }
 
 void cMain::OnMenuOpen(wxCommandEvent& evt)
@@ -141,19 +153,11 @@ void cMain::OnMenuExit(wxCommandEvent& evt)
 
 // Takes value from the text box and adds it to the list box when 
 // the "Click Me" box is clicked then clears the text box.
-// Also appends submitted values to a save file.
 void cMain::OnButtonClicked(wxCommandEvent& evt)
 {
-	using namespace std;
-
 	m_list1->AppendString(m_txt1->GetValue());
-
-	// This adds a timestamp to the save file. Re-enable this
-	// later when ready to add that functionality
-	//time_t timestamp = time(nullptr);
-	//saveFile << ctime(&timestamp) << " " << (m_txt1->GetValue()) << '\n';
-
 	m_txt1->Clear();
+
 	evt.Skip();
 }
 

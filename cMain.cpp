@@ -1,6 +1,6 @@
 // TODO
 // 1) Make the interface look a little nicer
-// 2) Add enter key to submit and escape key to clear TxtCtrl
+// 2) Add enter key to submit and escape key to clear TxtCtrl (Tried and failed this sucks)
 // 3) Consider the steps going forward to enable networking
 
 

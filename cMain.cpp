@@ -1,6 +1,8 @@
 // TODO
-// 1) Make the interface look a little nicer
-// 2) Add escape key to clear TxtCtrl
+// 1) Figure out what all the buttons should do
+// 2) Nail down what the shipped functionality should be
+// 3) Implement shop with strong items for unlock
+// 4) Figure out currency (gp, wins, etc.)
 
 
 #include "cMain.h"
@@ -14,9 +16,10 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 	EVT_MENU(10001, cMain::OnMenuOpen)
 	EVT_MENU(10002, cMain::OnMenuSaveAs)
 	EVT_MENU(10003, cMain::OnMenuExit)
-	EVT_BUTTON(10004, cMain::OnButtonClicked)
-	EVT_BUTTON(10005, cMain::OnButtonClear)
+	EVT_BUTTON(10010, cMain::OnButtonClicked)
+	EVT_BUTTON(10011, cMain::OnButtonClear)
 	EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
+	EVT_KEY_DOWN(cMain::OnEnterFocus)
 wxEND_EVENT_TABLE()
 
 
@@ -35,14 +38,14 @@ cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30,30), wxSize(
 	// Add File Menu to the Menu Bar
 	m_MenuBar->Append(menuFile, "File");
 
-	m_btn1 = new wxButton(this, 10004, "Submit", wxPoint(490, 455), wxSize(100, 55));
-	m_btn2 = new wxButton(this, 10005, "Clear", wxPoint(595, 455), wxSize(100, 55));
-	m_btn3 = new wxButton(this, 10006, "TBD1", wxPoint(490, 515), wxSize(100, 55));
-	m_btn4 = new wxButton(this, 10007, "TBD2", wxPoint(595, 515), wxSize(100, 55));
-	m_btn5 = new wxButton(this, 10008, "TBD3", wxPoint(490, 575), wxSize(100, 55));
-	m_btn6 = new wxButton(this, 10009, "TBD4", wxPoint(595, 575), wxSize(100, 55));
-	m_btn7 = new wxButton(this, 10010, "TBD5", wxPoint(490, 635), wxSize(100, 55));
-	m_btn8 = new wxButton(this, 10011, "TBD6", wxPoint(595, 635), wxSize(100, 55));
+	m_btn1 = new wxButton(this, 10004, "Inventory", wxPoint(490, 455), wxSize(100, 55));
+	m_btn2 = new wxButton(this, 10005, "Shop", wxPoint(595, 455), wxSize(100, 55));
+	m_btn3 = new wxButton(this, 10006, "Make GP", wxPoint(490, 515), wxSize(100, 55));
+	m_btn4 = new wxButton(this, 10007, "Resign", wxPoint(595, 515), wxSize(100, 55));
+	m_btn5 = new wxButton(this, 10008, "Command List", wxPoint(490, 575), wxSize(100, 55));
+	m_btn6 = new wxButton(this, 10009, "Settings", wxPoint(595, 575), wxSize(100, 55));
+	m_btn7 = new wxButton(this, 10010, "Submit", wxPoint(490, 635), wxSize(100, 55));
+	m_btn8 = new wxButton(this, 10011, "Clear", wxPoint(595, 635), wxSize(100, 55));
 	// wxTE_PROCESS_ENTER used to accept the enter key with the field focused
 	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 665), wxSize(475, 25), wxTE_PROCESS_ENTER);
 	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 455), wxSize(475, 211));
@@ -56,34 +59,25 @@ cMain::~cMain()
 {
 }
 
+// Resets focus to the text entry field
+void cMain::OnEnterFocus(wxKeyEvent& evt)
+{
+	if (evt.GetKeyCode() == WXK_RETURN)
+	{
+		m_txt1->SetFocus();
+
+		evt.Skip(false);
+	}
+}
+
 void cMain::OnEnterPressed(wxCommandEvent& evt)
 {	
-
-
+	// This works and is the default functionality
 	m_list1->AppendString(m_txt1->GetValue());
 	m_txt1->Clear();
 
 	// Set to false to stop windows bloop sound
 	evt.Skip(false);
-
-	// *** FIX THIS ***
-	// The line "m_txt1->SetFocus()" doesn't work. Focus
-	// is not being given to that box. Maybe an enter key
-	// related issue. 
-	//if (m_txt1->HasFocus())
-	//{
-	//	m_list1->AppendString(m_txt1->GetValue());
-	//	m_txt1->Clear();
-
-	//	// Set to false to stop windows bloop sound
-	//	evt.Skip(false);
-	//}
-
-	//else
-	//{
-	//	m_txt1->SetFocus();
-	//	/*evt.Skip(false);*/
-	//}
 }
 
 void cMain::OnMenuOpen(wxCommandEvent& evt)
@@ -192,5 +186,7 @@ void cMain::OnButtonClicked(wxCommandEvent& evt)
 void cMain::OnButtonClear(wxCommandEvent& evt)
 {
 	m_list1->Clear();
+	m_txt1->SetFocus();
+
 	evt.Skip();
 }

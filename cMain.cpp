@@ -1,14 +1,12 @@
 // TODO
 // 1) Make the interface look a little nicer
 // 2) Add escape key to clear TxtCtrl
-// 3) Consider the steps going forward to enable networking
 
 
 #include "cMain.h"
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include <wx/accel.h>
 
 
 // Event handling table
@@ -16,14 +14,14 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 	EVT_MENU(10001, cMain::OnMenuOpen)
 	EVT_MENU(10002, cMain::OnMenuSaveAs)
 	EVT_MENU(10003, cMain::OnMenuExit)
-	EVT_BUTTON(10004, OnButtonClicked)
+	EVT_BUTTON(10004, cMain::OnButtonClicked)
 	EVT_BUTTON(10005, cMain::OnButtonClear)
 	EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
 wxEND_EVENT_TABLE()
 
 
 // Creates the menu bar, button, text box, and list box elements
-cMain::cMain() : wxFrame(nullptr, wxID_ANY, "GUI Practice", wxPoint(30,30), wxSize(600,500))
+cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30,30), wxSize(1200,760))
 {
 	m_MenuBar = new wxMenuBar();
 	this->SetMenuBar(m_MenuBar);
@@ -37,11 +35,20 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "GUI Practice", wxPoint(30,30), wxSi
 	// Add File Menu to the Menu Bar
 	m_MenuBar->Append(menuFile, "File");
 
-	m_btn1 = new wxButton(this, 10004, "Submit", wxPoint(10, 10), wxSize(100, 35));
-	m_btn2 = new wxButton(this, 10005, "Clear", wxPoint(120, 10), wxSize(100, 35));
+	m_btn1 = new wxButton(this, 10004, "Submit", wxPoint(490, 455), wxSize(100, 55));
+	m_btn2 = new wxButton(this, 10005, "Clear", wxPoint(595, 455), wxSize(100, 55));
+	m_btn3 = new wxButton(this, 10006, "TBD1", wxPoint(490, 515), wxSize(100, 55));
+	m_btn4 = new wxButton(this, 10007, "TBD2", wxPoint(595, 515), wxSize(100, 55));
+	m_btn5 = new wxButton(this, 10008, "TBD3", wxPoint(490, 575), wxSize(100, 55));
+	m_btn6 = new wxButton(this, 10009, "TBD4", wxPoint(595, 575), wxSize(100, 55));
+	m_btn7 = new wxButton(this, 10010, "TBD5", wxPoint(490, 635), wxSize(100, 55));
+	m_btn8 = new wxButton(this, 10011, "TBD6", wxPoint(595, 635), wxSize(100, 55));
 	// wxTE_PROCESS_ENTER used to accept the enter key with the field focused
-	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 65), wxSize(300, 25), wxTE_PROCESS_ENTER);
-	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 110), wxSize(300, 300));
+	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 665), wxSize(475, 25), wxTE_PROCESS_ENTER);
+	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 455), wxSize(475, 211));
+	m_list2 = new wxListBox(this, wxID_ANY, wxPoint(700, 455), wxSize(475, 235));
+
+	m_txt1->SetFocus();
 }
 
 // This is something about virtual shit idk
@@ -51,11 +58,32 @@ cMain::~cMain()
 
 void cMain::OnEnterPressed(wxCommandEvent& evt)
 {	
+
+
 	m_list1->AppendString(m_txt1->GetValue());
 	m_txt1->Clear();
-	
+
 	// Set to false to stop windows bloop sound
 	evt.Skip(false);
+
+	// *** FIX THIS ***
+	// The line "m_txt1->SetFocus()" doesn't work. Focus
+	// is not being given to that box. Maybe an enter key
+	// related issue. 
+	//if (m_txt1->HasFocus())
+	//{
+	//	m_list1->AppendString(m_txt1->GetValue());
+	//	m_txt1->Clear();
+
+	//	// Set to false to stop windows bloop sound
+	//	evt.Skip(false);
+	//}
+
+	//else
+	//{
+	//	m_txt1->SetFocus();
+	//	/*evt.Skip(false);*/
+	//}
 }
 
 void cMain::OnMenuOpen(wxCommandEvent& evt)

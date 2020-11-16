@@ -179,6 +179,7 @@ void cMain::OnButtonClicked(wxCommandEvent& evt)
 {
 	m_list1->AppendString(m_txt1->GetValue());
 	m_txt1->Clear();
+	m_txt1->SetFocus();
 
 	evt.Skip();
 }

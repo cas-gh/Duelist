@@ -3,28 +3,37 @@
 // 2) Nail down what the shipped functionality should be
 // 3) Implement shop with strong items for unlock
 // 4) Figure out currency (gp, wins, etc.)
+// 5) Maybe use treasure trails as a way to get gp
+// 6) Fix error messages to display in wxMessageBox
 
 
+// *****NETWORKING INCLUDES AND DEFINITIONS*****
+#define _CRT_SECURE_NO_WARNINGS
+#include <string>
+#include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+
+
+// *****wxWidgets INCLUDES AND DEFINITIONS*****
 #include "cMain.h"
 #include <iostream>
 #include <fstream>
-#include <ctime>
 
 
 // Event handling table
 wxBEGIN_EVENT_TABLE(cMain, wxFrame)
-	EVT_MENU(10001, cMain::OnMenuOpen)
-	EVT_MENU(10002, cMain::OnMenuSaveAs)
-	EVT_MENU(10003, cMain::OnMenuExit)
-	EVT_BUTTON(10010, cMain::OnButtonClicked)
-	EVT_BUTTON(10011, cMain::OnButtonClear)
-	EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
-	EVT_KEY_DOWN(cMain::OnEnterFocus)
+EVT_MENU(10001, cMain::OnMenuOpen)
+EVT_MENU(10002, cMain::OnMenuSaveAs)
+EVT_MENU(10003, cMain::OnMenuExit)
+EVT_BUTTON(10010, cMain::OnButtonSubmit)
+EVT_BUTTON(10011, cMain::OnButtonClear)
+EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
+EVT_KEY_DOWN(cMain::OnEnterFocus)
 wxEND_EVENT_TABLE()
 
 
 // Creates the menu bar, button, text box, and list box elements
-cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30,30), wxSize(1200,760))
+cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30, 30), wxSize(1200, 760))
 {
 	m_MenuBar = new wxMenuBar();
 	this->SetMenuBar(m_MenuBar);
@@ -54,12 +63,89 @@ cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30,30), wxSize(
 	m_txt1->SetFocus();
 }
 
+
+// ************** BEGIN NETWORK INCORPORATION **************
+std::string networkTest(std::string userInput)
+{
+	std::string serverOutput = "Error!";
+	std::string ipAddress = "127.0.0.1";			// IP Adress of the server
+	int port = 54000;									// Listening port # on the server
+
+	// Initialize winsock
+	WSADATA data;
+	WORD ver = MAKEWORD(2, 2);
+	int wsResult = WSAStartup(ver, &data);
+	if (wsResult != 0)
+	{
+		std::cerr << "Can't start winsock, Err #" << wsResult << '\n';
+		return serverOutput;
+	}
+
+	// Create socket
+	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == INVALID_SOCKET)
+	{
+		std::cerr << "Can't create socket, Err #" << WSAGetLastError() << '\n';
+		WSACleanup();
+		return serverOutput;
+	}
+
+	// Fill in a hint structure
+	sockaddr_in hint;
+	hint.sin_family = AF_INET;
+	hint.sin_port = htons(port);
+	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
+
+	// Connect to server
+	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
+	if (connResult == SOCKET_ERROR)
+	{
+		//std::cerr << "Can't connect to server, Err #" << WSAGetLastError() << '\n';
+		wxMessageBox("Can't connect to server, Err #" + WSAGetLastError());
+		closesocket(sock);
+		WSACleanup();
+		return serverOutput;
+	}
+
+	// Do-while loop to send and receive data
+	char buf[4096];
+	do
+	{
+		// Prompt the user for some text
+		if (userInput.size() > 0)
+		{
+			// Send the text
+			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
+			if (sendResult != SOCKET_ERROR)
+			{
+				// Wait for response
+				ZeroMemory(buf, 4096);
+				int bytesReceived = recv(sock, buf, 4096, 0);
+				if (bytesReceived > 0)
+				{
+					// Echo response to console
+					serverOutput = "SERVER> You sent: " + std::string(buf, 0, bytesReceived) + '\n';
+				}
+			}
+		}
+		userInput = "test";
+	} while (userInput != "test");
+
+	// Gracefully close down everything
+	closesocket(sock);
+	WSACleanup();
+
+	return serverOutput;
+}
+// ************** ENDOF NETWORK INCORPORATION **************
+
+
 // This is something about virtual shit idk
 cMain::~cMain()
 {
 }
 
-// Resets focus to the text entry field
+// Resets focus to the text entry field on pressing the Enter key
 void cMain::OnEnterFocus(wxKeyEvent& evt)
 {
 	if (evt.GetKeyCode() == WXK_RETURN)
@@ -71,12 +157,21 @@ void cMain::OnEnterFocus(wxKeyEvent& evt)
 }
 
 void cMain::OnEnterPressed(wxCommandEvent& evt)
-{	
-	// This works and is the default functionality
-	m_list1->AppendString(m_txt1->GetValue());
+{
+	wxString userTextCtrl = m_txt1->GetValue();
+	m_list1->AppendString(userTextCtrl);
+
+	// Converts wxString from textctrl to a std::string so that the
+	// networkTest() function can use it
+	std::string serverInput = std::string(userTextCtrl.mb_str());
+
+	// Converts the output from the networkTest() function back
+	// to a wxString
+	wxString serverString(networkTest(serverInput));
+
+	m_list2->AppendString(serverString);
 	m_txt1->Clear();
 
-	// Set to false to stop windows bloop sound
 	evt.Skip(false);
 }
 
@@ -94,7 +189,7 @@ void cMain::OnMenuOpen(wxCommandEvent& evt)
 	{
 		return;
 	}
-	
+
 	// Checks for valid file then saves path as string
 	wxFileInputStream input_stream(openFileDialog.GetPath());
 	if (!input_stream.IsOk())
@@ -105,7 +200,7 @@ void cMain::OnMenuOpen(wxCommandEvent& evt)
 		}
 	}
 	string loadFilePath(openFileDialog.GetPath());
-	
+
 	// Clears list box
 	m_list1->Clear();
 
@@ -170,12 +265,12 @@ void cMain::OnMenuExit(wxCommandEvent& evt)
 	{
 		Close();
 		evt.Skip();
-	}	
+	}
 }
 
 // Takes value from the text box and adds it to the list box when 
-// the "Click Me" box is clicked then clears the text box.
-void cMain::OnButtonClicked(wxCommandEvent& evt)
+// the submit button is clicked then clears the text box.
+void cMain::OnButtonSubmit(wxCommandEvent& evt)
 {
 	m_list1->AppendString(m_txt1->GetValue());
 	m_txt1->Clear();

@@ -1,7 +1,9 @@
 #pragma once
+
 #include "wx/wx.h"
 #include <wx/wfstream.h>
 #include <wx/accel.h>
+#include <string>
 
 
 class cMain : public wxFrame
@@ -16,7 +18,7 @@ private:
 	void OnMenuOpen(wxCommandEvent& evt);
 	void OnMenuSaveAs(wxCommandEvent& evt);
 	void OnMenuExit(wxCommandEvent& evt);
-	void OnButtonClicked(wxCommandEvent& evt);
+	void OnButtonSubmit(wxCommandEvent& evt);
 	void OnButtonClear(wxCommandEvent& evt);
 	void OnEnterPressed(wxCommandEvent& evt);
 	void OnEnterFocus(wxKeyEvent& evt);

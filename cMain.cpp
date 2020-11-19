@@ -1,9 +1,9 @@
 // TODO
-// 1) Get networking working on a specified IP Address
-// 2) Implement shop with strong items for unlock
-// 3) Figure out currency (gp, wins, etc.)
-// 4) Maybe use treasure trails as a way to get gp
-// 5) Fix error messages to display in wxMessageBox
+// 1) Implement shop with strong items for unlock
+// 2) Figure out currency (gp, wins, etc.)
+// 3) Maybe use treasure trails as a way to get gp
+// 4) Fix error messages to display in wxMessageBox
+// 5) Build into standalone application (this is fucking hard. Failed so many times.)
 
 
 // ***** NETWORKING INCLUDES AND DEFINITIONS *****

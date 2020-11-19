@@ -1,6 +1,5 @@
 // TODO
-// 0) Get networking working on a specified IP Address
-// 1) Start creating a list of commands that can be interpreted by the server.
+// 1) Get networking working on a specified IP Address
 // 2) Implement shop with strong items for unlock
 // 3) Figure out currency (gp, wins, etc.)
 // 4) Maybe use treasure trails as a way to get gp
@@ -22,6 +21,7 @@
 
 // ***** OTHER INCLUDES AND DEFINITIONS *****
 #include "Commands.h"
+#include "Info.h"
 
 
 // Event handling table
@@ -73,7 +73,7 @@ cMain::cMain() : wxFrame(nullptr, 00001, "Duelist", wxPoint(30, 30), wxSize(1200
 std::string networkTest(std::string userInput)
 {
 	std::string serverOutput = "Error!";
-	std::string ipAddress = "127.0.0.1";			// IP Adress of the server
+	//std::string ipAddress = "127.0.0.1";				// Localhost IP
 	int port = 54000;									// Listening port # on the server
 
 	// Initialize winsock

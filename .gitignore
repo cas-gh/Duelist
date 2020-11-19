@@ -6,5 +6,6 @@
 !README.txt
 !cApp.h
 !cMain.h
+!Commands.h
 !cApp.cpp
 !cMain.cpp

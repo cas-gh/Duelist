@@ -7,17 +7,21 @@
 // 5) Fix error messages to display in wxMessageBox
 
 
-// *****NETWORKING INCLUDES AND DEFINITIONS*****
+// ***** NETWORKING INCLUDES AND DEFINITIONS *****
 #define _CRT_SECURE_NO_WARNINGS
 #include <string>
 #include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 
 
-// *****wxWidgets INCLUDES AND DEFINITIONS*****
+// ***** wxWidgets INCLUDES AND DEFINITIONS *****
 #include "cMain.h"
 #include <iostream>
 #include <fstream>
+
+
+// ***** OTHER INCLUDES AND DEFINITIONS *****
+#include "Commands.h"
 
 
 // Event handling table
@@ -34,7 +38,7 @@ wxEND_EVENT_TABLE()
 
 
 // Creates the menu bar, button, text box, and list box elements
-cMain::cMain() : wxFrame(nullptr, 00001, "GUI Practice", wxPoint(30, 30), wxSize(1200, 760))
+cMain::cMain() : wxFrame(nullptr, 00001, "Duelist", wxPoint(30, 30), wxSize(1200, 760))
 {
 	m_MenuBar = new wxMenuBar();
 	this->SetMenuBar(m_MenuBar);
@@ -294,8 +298,14 @@ void cMain::OnMenuExit(wxCommandEvent& evt)
 
 void cMain::OnButtonCommands(wxCommandEvent& evt)
 {
-	m_list1->AppendString("This is a test\n");
-	m_list1->AppendString("This should be beneathe the last thing");
+	m_list1->AppendString("The available commands are: ");
+	for (int i = 0; i < numCommands; ++i)
+	{
+		m_list1->AppendString("     !" +wxString(commands[i]) + '\n');
+	}
+	
+	m_txt1->SetFocus();
+	evt.Skip();
 }
 
 // Takes value from the text box and adds it to the list box when 

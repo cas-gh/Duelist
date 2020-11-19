@@ -22,6 +22,7 @@ private:
 	void OnButtonClear(wxCommandEvent& evt);
 	void OnEnterPressed(wxCommandEvent& evt);
 	void OnEnterFocus(wxKeyEvent& evt);
+	void OnButtonCommands(wxCommandEvent& evt);
 
 public:
 	wxButton* m_btn1 = nullptr;

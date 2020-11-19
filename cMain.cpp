@@ -1,10 +1,10 @@
 // TODO
-// 1) Figure out what all the buttons should do
-// 2) Nail down what the shipped functionality should be
-// 3) Implement shop with strong items for unlock
-// 4) Figure out currency (gp, wins, etc.)
-// 5) Maybe use treasure trails as a way to get gp
-// 6) Fix error messages to display in wxMessageBox
+// 0) Get networking working on a specified IP Address
+// 1) Start creating a list of commands that can be interpreted by the server.
+// 2) Implement shop with strong items for unlock
+// 3) Figure out currency (gp, wins, etc.)
+// 4) Maybe use treasure trails as a way to get gp
+// 5) Fix error messages to display in wxMessageBox
 
 
 // *****NETWORKING INCLUDES AND DEFINITIONS*****
@@ -25,6 +25,7 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 EVT_MENU(10001, cMain::OnMenuOpen)
 EVT_MENU(10002, cMain::OnMenuSaveAs)
 EVT_MENU(10003, cMain::OnMenuExit)
+EVT_BUTTON(10008, cMain::OnButtonCommands)
 EVT_BUTTON(10010, cMain::OnButtonSubmit)
 EVT_BUTTON(10011, cMain::OnButtonClear)
 EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
@@ -123,8 +124,20 @@ std::string networkTest(std::string userInput)
 				int bytesReceived = recv(sock, buf, 4096, 0);
 				if (bytesReceived > 0)
 				{
-					// Echo response to console
-					serverOutput = "SERVER> You sent: " + std::string(buf, 0, bytesReceived) + '\n';
+					std::string response = std::string(buf, 0, bytesReceived);
+
+					if (response == "NULL")
+					{
+						serverOutput = "NULL";
+					}
+					else
+					{
+						serverOutput = "<SERVER> " + response + '\n';
+					}
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
@@ -165,12 +178,23 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 	// networkTest() function can use it
 	std::string serverInput = std::string(userTextCtrl.mb_str());
 
+	std::string serverOutput = networkTest(serverInput);
+
 	// Converts the output from the networkTest() function back
 	// to a wxString
-	wxString serverString(networkTest(serverInput));
+	wxString serverString(serverOutput);
+	
+	// Checks if server needs to write anything and does if it needs to
+	if (serverString == "NULL")
+	{
+		m_txt1->Clear();
+	}
+	else 
+	{
+		m_list2->AppendString(serverString);
+		m_txt1->Clear();
+	}
 
-	m_list2->AppendString(serverString);
-	m_txt1->Clear();
 
 	evt.Skip(false);
 }
@@ -266,6 +290,12 @@ void cMain::OnMenuExit(wxCommandEvent& evt)
 		Close();
 		evt.Skip();
 	}
+}
+
+void cMain::OnButtonCommands(wxCommandEvent& evt)
+{
+	m_list1->AppendString("This is a test\n");
+	m_list1->AppendString("This should be beneathe the last thing");
 }
 
 // Takes value from the text box and adds it to the list box when 

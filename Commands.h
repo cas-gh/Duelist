@@ -3,6 +3,9 @@
 
 #pragma once
 
-const int numCommands = 3;
+#include <vector>
+#include <string>
 
-std::string commands[numCommands]{"chat", "clue_count", "dds"};
+std::vector<std::string> commands = {"ags", "blood", "chat", "clue_count", "dds", "ice", "record", "whip"};
+
+int numCommands = commands.size();

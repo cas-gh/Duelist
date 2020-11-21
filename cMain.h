@@ -15,8 +15,7 @@ public:
 private:
 	wxMenuBar* m_MenuBar = nullptr;
 
-	void OnMenuOpen(wxCommandEvent& evt);
-	void OnMenuSaveAs(wxCommandEvent& evt);
+	void OnMenuCreate(wxCommandEvent& evt);
 	void OnMenuExit(wxCommandEvent& evt);
 	void OnButtonSubmit(wxCommandEvent& evt);
 	void OnButtonClear(wxCommandEvent& evt);

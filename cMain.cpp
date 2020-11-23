@@ -68,7 +68,7 @@ cMain::cMain() : wxFrame(nullptr, 00001, "Duelist", wxPoint(30, 30), wxSize(1200
 std::string networkTest(std::string userInput)
 {
 	std::string serverOutput = "Error!";
-	//std::string ipAddress = "127.0.0.1";				// Localhost IP
+	std::string ipAddress = "127.0.0.1";				// Localhost IP
 	int port = 54000;									// Listening port # on the server
 
 	// Initialize winsock
@@ -183,9 +183,18 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 		std::ifstream loadFile("SaveFile.txt");
 		std::string loadString;
 		std::getline(loadFile, loadString);
+		std::size_t firstPos = loadString.find(',');
+		std::string middleString = loadString.substr(firstPos + 1);
+		std::size_t endFinder = middleString.find(',');
+		std::string winString = middleString.substr(0, endFinder);
+
+		std::size_t lossEndFinder = (middleString.substr(0)).find(',');
+		std::string lossString = middleString.substr(endFinder + 1, lossEndFinder);
+
 		loadFile.close();
 
-		m_list1->AppendString(loadString);
+		m_list1->AppendString("Wins: " + winString);
+		m_list1->AppendString("Losses: " + lossString);
 	}
 
 	// Converts wxString from textctrl to a std::string so that the

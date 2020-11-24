@@ -6,6 +6,6 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> commands = {"ags", "blood", "chat", "clue_count", "dds", "ice", "record", "whip"};
+std::vector<std::string> commands = {"ags", "blood", "chat", "clue_count", "dds", "gp", "ice", "record", "whip"};
 
 int numCommands = commands.size();

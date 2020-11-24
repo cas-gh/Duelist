@@ -174,15 +174,15 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 	wxString userTextCtrl = m_txt1->GetValue();
 	m_list1->AppendString(userTextCtrl);
 
-
-	// THIS IS WHERE YOU LEFT OFF ***********************************************
-	// It loads the file but you just need the wins and losses
-	// Could maybe just do this all in the Accounts.h file.
+	// Prints out user's wins and losses
 	if (userTextCtrl == wxString("!record"))
 	{
+		// Uses indexing to find values between commas containing 
+		// the relevant information.
 		std::ifstream loadFile("SaveFile.txt");
 		std::string loadString;
 		std::getline(loadFile, loadString);
+
 		std::size_t firstPos = loadString.find(',');
 		std::string middleString = loadString.substr(firstPos + 1);
 		std::size_t endFinder = middleString.find(',');
@@ -195,6 +195,54 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 
 		m_list1->AppendString("Wins: " + winString);
 		m_list1->AppendString("Losses: " + lossString);
+	}
+
+	// Displays the ammount of gp the user has
+	if (userTextCtrl == wxString("!gp"))
+	{
+		std::ifstream loadFile("SaveFile.txt");
+		std::string loadString;
+		std::getline(loadFile, loadString);
+
+		std::size_t comma1 = loadString.find(',');
+		std::string string1 = loadString.substr(comma1 + 1);
+		std::size_t comma2 = string1.find(',');
+		std::string string2 = string1.substr(comma2 + 1);
+		std::size_t comma3 = string2.find(',');
+		std::string string3 = string2.substr(comma3 + 1);
+		std::size_t comma4 = string3.find(',');
+		std::string finalString = string3.substr(0, comma4);
+
+		m_list1->AppendString("You have: " + finalString + " gp.");
+
+		loadFile.close();
+
+		evt.Skip();
+	}
+
+	// Displays the number of clues done by the user.
+	if (userTextCtrl == wxString("!clue_count"))
+	{
+		std::ifstream loadFile("SaveFile.txt");
+		std::string loadString;
+		std::getline(loadFile, loadString);
+
+		std::size_t comma1 = loadString.find(',');
+		std::string string1 = loadString.substr(comma1 + 1);
+		std::size_t comma2 = string1.find(',');
+		std::string string2 = string1.substr(comma2 + 1);
+		std::size_t comma3 = string2.find(',');
+		std::string string3 = string2.substr(comma3 + 1);
+		std::size_t comma4 = string3.find(',');
+		std::string string4 = string3.substr(comma4 + 1);
+		std::size_t comma5 = string4.find(',');
+		std::string finalString = string4.substr(0, comma5);
+
+		m_list1->AppendString("You have completed: " + finalString + " clues.");
+
+		loadFile.close();
+
+		evt.Skip();
 	}
 
 	// Converts wxString from textctrl to a std::string so that the
@@ -217,7 +265,6 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 		m_list2->AppendString(serverString);
 		m_txt1->Clear();
 	}
-
 
 	evt.Skip(false);
 }

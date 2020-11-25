@@ -1,9 +1,8 @@
 // TODO
-// 1) Implement a stats info panel above the chatboxes. Could include inventory.
+// 1) Implement a stats info panel above the chatboxes. Could include worn equipment.
 // 2) Implement a shop
-// 3) Maybe use treasure trails as a way to get gp
-// 4) Fix error messages to display in wxMessageBox
-// 5) Build into standalone application (this is fucking hard. Failed so many times.)
+// 3) Fix error messages to display in wxMessageBox
+// 4) Build into standalone application (This is fucking hard. Failed so many times.)
 
 
 // ***** NETWORKING INCLUDES AND DEFINITIONS *****
@@ -56,11 +55,16 @@ cMain::cMain() : wxFrame(nullptr, 00001, "Duelist", wxPoint(30, 30), wxSize(1200
 	m_btn6 = new wxButton(this, 10009, "Settings", wxPoint(595, 575), wxSize(100, 55));
 	m_btn7 = new wxButton(this, 10010, "Submit", wxPoint(490, 635), wxSize(100, 55));
 	m_btn8 = new wxButton(this, 10011, "Clear", wxPoint(595, 635), wxSize(100, 55));
+
 	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 665), wxSize(475, 25), wxTE_PROCESS_ENTER);
 	m_list1 = new wxListBox(this, wxID_ANY, wxPoint(10, 455), wxSize(475, 211));
 	m_list2 = new wxListBox(this, wxID_ANY, wxPoint(700, 455), wxSize(475, 235));
+	m_list3 = new wxListBox(this, wxID_ANY, wxPoint(10, 10), wxSize(475, 40));
 
 	m_txt1->SetFocus();
+	
+	// Health bar prototype
+	m_list3->SetBackgroundColour(wxColor(35, 227, 25));
 }
 
 
@@ -287,7 +291,7 @@ void cMain::OnMenuCreate(wxCommandEvent& evt)
 		account.setAllInfo(accountName, 0, 0, 10000, 0);
 
 		string saveFilePath = "SaveFile.txt";
-		ofstream saveFile(saveFilePath, fstream::app);
+		ofstream saveFile(saveFilePath);
 
 		saveFile << account.a_name << ',' << account.a_wins << ',' << account.a_losses << ','
 			<< account.a_gp << ',' << account.a_clues << '\n';
@@ -336,6 +340,7 @@ void cMain::OnButtonSubmit(wxCommandEvent& evt)
 void cMain::OnButtonClear(wxCommandEvent& evt)
 {
 	m_list1->Clear();
+	m_txt1->Clear();
 	m_txt1->SetFocus();
 
 	evt.Skip();

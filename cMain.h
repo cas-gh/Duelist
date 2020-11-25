@@ -32,9 +32,11 @@ public:
 	wxButton* m_btn6 = nullptr;
 	wxButton* m_btn7 = nullptr;
 	wxButton* m_btn8 = nullptr;
+
 	wxTextCtrl* m_txt1 = nullptr;
 	wxListBox* m_list1 = nullptr;
 	wxListBox* m_list2 = nullptr;
+	wxListBox* m_list3 = nullptr;
 
 	wxDECLARE_EVENT_TABLE();
 };

@@ -1,4 +1,5 @@
 // TODO
+// 0) Make the many if statements in the OnEnterPressed function into switch statements.
 // 1) Implement a stats info panel above the chatboxes. Could include worn equipment.
 // 2) Implement a shop
 // 3) Fix error messages to display in wxMessageBox

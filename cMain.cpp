@@ -249,6 +249,14 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 		evt.Skip();
 	}
 
+	// Clears Server Text Box
+	if (userTextCtrl == wxString("!clear"))
+	{
+		m_list2->Clear();
+
+		evt.Skip();
+	}
+
 	// Converts wxString from textctrl to a std::string so that the
 	// networkTest() function can use it
 	std::string serverInput = std::string(userTextCtrl.mb_str());

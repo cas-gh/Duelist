@@ -1,9 +1,10 @@
 // TODO
-// 0) Make the many if statements in the OnEnterPressed function into switch statements.
-// 1) Implement a stats info panel above the chatboxes. Could include worn equipment.
-// 2) Implement a shop
-// 3) Fix error messages to display in wxMessageBox
-// 4) Build into standalone application (This is fucking hard. Failed so many times.)
+// 1) Move user message checks to server where possible
+// 2) Include timestamp in server response
+// 3) Implement a stats info panel above the chatboxes. Could include worn equipment.
+// 4) Implement a shop
+// 5) Fix error messages to display in wxMessageBox
+// 6) Build into standalone application (This is fucking hard. Failed so many times.)
 
 
 // ***** NETWORKING INCLUDES AND DEFINITIONS *****
@@ -27,7 +28,6 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame)
 EVT_MENU(10001, cMain::OnMenuCreate)
 EVT_MENU(10003, cMain::OnMenuExit)
 EVT_BUTTON(10008, cMain::OnButtonCommands)
-EVT_BUTTON(10010, cMain::OnButtonSubmit)
 EVT_BUTTON(10011, cMain::OnButtonClear)
 EVT_TEXT_ENTER(20001, cMain::OnEnterPressed)
 EVT_KEY_DOWN(cMain::OnEnterFocus)
@@ -48,13 +48,13 @@ cMain::cMain() : wxFrame(nullptr, 00001, "Duelist", wxPoint(30, 30), wxSize(1200
 	// Add File Menu to the Menu Bar
 	m_MenuBar->Append(menuFile, "File");
 
-	m_btn1 = new wxButton(this, 10004, "Inventory", wxPoint(490, 455), wxSize(100, 55));
+	m_btn1 = new wxButton(this, 10004, "Bank", wxPoint(490, 455), wxSize(100, 55));
 	m_btn2 = new wxButton(this, 10005, "Shop", wxPoint(595, 455), wxSize(100, 55));
 	m_btn3 = new wxButton(this, 10006, "Make GP", wxPoint(490, 515), wxSize(100, 55));
 	m_btn4 = new wxButton(this, 10007, "Resign", wxPoint(595, 515), wxSize(100, 55));
 	m_btn5 = new wxButton(this, 10008, "Command List", wxPoint(490, 575), wxSize(100, 55));
 	m_btn6 = new wxButton(this, 10009, "Settings", wxPoint(595, 575), wxSize(100, 55));
-	m_btn7 = new wxButton(this, 10010, "Submit", wxPoint(490, 635), wxSize(100, 55));
+	m_btn7 = new wxButton(this, 10010, "Wiki", wxPoint(490, 635), wxSize(100, 55));
 	m_btn8 = new wxButton(this, 10011, "Clear", wxPoint(595, 635), wxSize(100, 55));
 
 	m_txt1 = new wxTextCtrl(this, 20001, "", wxPoint(10, 665), wxSize(475, 25), wxTE_PROCESS_ENTER);
@@ -251,8 +251,9 @@ void cMain::OnEnterPressed(wxCommandEvent& evt)
 	}
 
 	// Clears Server Text Box
-	if (userTextCtrl == wxString("!clear"))
+	if (userTextCtrl == wxString("!clearall"))
 	{
+		m_list1->Clear();
 		m_list2->Clear();
 
 		evt.Skip();
@@ -331,18 +332,6 @@ void cMain::OnButtonCommands(wxCommandEvent& evt)
 	}
 	
 	m_txt1->SetFocus();
-	evt.Skip();
-}
-
-void cMain::OnButtonSubmit(wxCommandEvent& evt)
-{
-	// Takes value from the text box and adds it to the list box when 
-	// the submit button is clicked then clears the text box.
-
-	m_list1->AppendString(m_txt1->GetValue());
-	m_txt1->Clear();
-	m_txt1->SetFocus();
-
 	evt.Skip();
 }
 

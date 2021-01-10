@@ -17,7 +17,6 @@ private:
 
 	void OnMenuCreate(wxCommandEvent& evt);
 	void OnMenuExit(wxCommandEvent& evt);
-	void OnButtonSubmit(wxCommandEvent& evt);
 	void OnButtonClear(wxCommandEvent& evt);
 	void OnEnterPressed(wxCommandEvent& evt);
 	void OnEnterFocus(wxKeyEvent& evt);

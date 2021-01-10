@@ -1,10 +1,9 @@
 // TODO
 // 1) Move user message checks to server where possible
-// 2) Include timestamp in server response
-// 3) Implement a stats info panel above the chatboxes. Could include worn equipment.
-// 4) Implement a shop
-// 5) Fix error messages to display in wxMessageBox
-// 6) Build into standalone application (This is fucking hard. Failed so many times.)
+// 2) Implement a stats info panel above the chatboxes. Could include worn equipment.
+// 3) Implement a shop
+// 4) Fix error messages to display in wxMessageBox
+// 5) Build into standalone application (This is fucking hard. Failed so many times.)
 
 
 // ***** NETWORKING INCLUDES AND DEFINITIONS *****
@@ -18,6 +17,7 @@
 #include "cMain.h"
 #include <iostream>
 #include <fstream>
+#include <ctime>
 #include "Commands.h"
 #include "Info.h"
 #include "Accounts.h"
@@ -136,7 +136,10 @@ std::string networkTest(std::string userInput)
 					}
 					else
 					{
-						serverOutput = "<SERVER> " + response + '\n';
+						// Uses ctime to display just the current time in hh:mm:ss format in front of
+						// the server response
+						time_t result = time(NULL);
+						serverOutput = "[" + static_cast<std::string>(ctime(&result)).substr(11, 8) + "]" + "<SERVER> " + response + '\n';
 					}
 				}
 				else
@@ -177,7 +180,9 @@ void cMain::OnEnterFocus(wxKeyEvent& evt)
 void cMain::OnEnterPressed(wxCommandEvent& evt)
 {
 	wxString userTextCtrl = m_txt1->GetValue();
-	m_list1->AppendString(userTextCtrl);
+	// Tacks the time in format hh:mm:ss onto the front of all user messages sent
+	time_t result = time(NULL);
+	m_list1->AppendString("[" + static_cast<std::string>(ctime(&result)).substr(11, 8) + "] " + userTextCtrl);
 
 	// Prints out user's wins and losses
 	if (userTextCtrl == wxString("!record"))
